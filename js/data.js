@@ -1,0 +1,147 @@
+// ── PRODUCT DATA ──
+const PRODUCTS = [
+  {
+    id: 1,
+    name: 'Embroidered Kurta',
+    cat: 'Kurta',
+    price: 2850,
+    oldPrice: 3500,
+    badge: 'Bestseller',
+    rating: 4.8,
+    reviews: 124,
+    img: 'https://i.pinimg.com/736x/e1/85/8c/e1858c79a89347e284b00ad3e9e5f152.jpg',
+    desc: 'Elegant hand-embroidered cotton kurta with work at the neckline. Perfect for festive occasions and Eid celebrations. Available in sizes XS–XXL.'
+  },
+  {
+    id: 2,
+    name: 'Gulnaar Lawn Suit',
+    cat: 'Lawn Suit',
+    price: 4200,
+    oldPrice: null,
+    badge: 'New',
+    rating: 4.6,
+    reviews: 47,
+    img: 'https://i.pinimg.com/736x/dc/ac/5a/dcac5a172daaf611f7d238c549d882b9.jpg',
+    desc: 'Three-piece lawn suit with chiffon dupatta. Floral printed with delicate embroidery on the borders. Breathable summer fabric ideal for Pakistani heat.'
+  },
+  {
+    id: 3,
+    name: 'Zari Gold Bangles Set',
+    cat: 'Bangles',
+    price: 1450,
+    oldPrice: 1800,
+    badge: 'Sale',
+    rating: 4.7,
+    reviews: 88,
+    img: 'https://i.pinimg.com/736x/b9/e6/0b/b9e60b96ab6689386e805e786fafdfd5.jpg',
+    desc: 'Set of 12 gold-toned bangles with intricate zari patterns. Perfect to pair with any traditional outfit. Adjustable sizing fits most wrists.'
+  },
+  {
+    id: 4,
+    name: 'Tri Color Dupatta',
+    cat: 'Dupatta',
+    price: 1900,
+    oldPrice: null,
+    badge: null,
+    rating: 4.4,
+    reviews: 32,
+    img: 'https://i.pinimg.com/736x/b0/31/2e/b0312eecbe9961ac26b9f62b97bdf0cc.jpg',
+    desc: 'Lightweight dupatta with hand-painted block-prints. Adds elegance to any kurta or shalwar kameez.'
+  },
+  {
+    id: 5,
+    name: 'Mehndi Shalwar Kameez',
+    cat: 'Shalwar Kameez',
+    price: 5500,
+    oldPrice: 6200,
+    badge: 'Bestseller',
+    rating: 4.9,
+    reviews: 211,
+    img: 'https://i.pinimg.com/736x/c5/d6/9f/c5d69fafb187ff757fd1f7409484f5a0.jpg',
+    desc: 'Formal shalwar kameez in rich forest green with golden tilla embroidery. Three-piece set with matching dupatta and trousers. Ideal for mehndi events.'
+  },
+  {
+    id: 6,
+    name: 'Kashmiri Churiyan',
+    cat: 'Jewellery',
+    price: 3200,
+    oldPrice: null,
+    badge: 'New',
+    rating: 4.5,
+    reviews: 19,
+    img: 'https://i.pinimg.com/736x/78/b6/16/78b616ecf47731ec5da061a42d2e5869.jpg',
+    desc: 'Statement Kashmiri churiyan inspired by Mughal jewellery traditions. Gold-plated with semi-precious stone accents.'
+  },
+  {
+    id: 7,
+    name: 'Floral Kurta',
+    cat: 'Kurta',
+    price: 3100,
+    oldPrice: 3800,
+    badge: 'Sale',
+    rating: 4.3,
+    reviews: 56,
+    img: 'https://i.pinimg.com/736x/00/32/38/0032383be718d8546061ca6fd15f9f26.jpg',
+    desc: 'Kurta in soft cotton with all-over floral print. Fitted waist with flared silhouette. Pair with farshi shalwar.'
+  },
+  {
+    id: 8,
+    name: 'Khushi Glass Bangles',
+    cat: 'Bangles',
+    price: 650,
+    oldPrice: null,
+    badge: null,
+    rating: 4.2,
+    reviews: 73,
+    img: 'https://i.pinimg.com/736x/c5/b3/1b/c5b31baf88befe0d62a44a73b100f82f.jpg',
+    desc: 'Handmade glass bangles in vibrant multicolor set of 24. Traditional Hyderabadi craftsmanship. A must-have for Eid and festive seasons.'
+  },
+  {
+    id: 9,
+    name: 'Jasmine White Lawn Suit',
+    cat: 'Lawn Suit',
+    price: 3800,
+    oldPrice: 4500,
+    badge: 'Sale',
+    rating: 4.6,
+    reviews: 98,
+    img: 'https://i.pinimg.com/736x/54/9a/1e/549a1eced8b8819eff078d37d6ac4ec1.jpg',
+    desc: 'Crisp white lawn three-piece with powder-blue floral embroidery. Includes digital print dupatta. Light enough for summer yet formal enough for gatherings.'
+  },
+  {
+    id: 10,
+    name: 'Casual Shalwar Kameez',
+    cat: 'Shalwar Kameez',
+    price: 4700,
+    oldPrice: null,
+    badge: 'New',
+    rating: 4.4,
+    reviews: 28,
+    img: 'https://i.pinimg.com/736x/9b/88/9a/9b889af6daa0b96221b5823d440f252d.jpg',
+    desc: 'Contemporary shalwar kameez with subtle thread embroidery on the yoke. Modern cut that merges traditional aesthetics with everyday wearability.'
+  },
+  {
+    id: 11,
+    name: 'Sitara Chiffon Dupatta',
+    cat: 'Dupatta',
+    price: 2100,
+    oldPrice: 2500,
+    badge: 'Sale',
+    rating: 4.7,
+    reviews: 61,
+    img: 'https://i.pinimg.com/1200x/06/8c/7f/068c7fc8b1e86e7d79c3472a5092aa1b.jpg',
+    desc: 'Chiffon dupatta with dense sitara (sequin) embroidery across the entire length. Creates a shimmering effect in light. Pairs beautifully with dark kurtas.'
+  },
+  {
+    id: 12,
+    name: 'Earring Set',
+    cat: 'Jewellery',
+    price: 890,
+    oldPrice: 1100,
+    badge: 'Sale',
+    rating: 4.5,
+    reviews: 44,
+    img: 'https://i.pinimg.com/1200x/21/8b/bc/218bbc1f282d1ecc6a6c17f56ce520e8.jpg',
+    desc: 'Lightweight and comfortable for all-day wear. Inspired by traditional Pakistani geometric patterns.'
+  }
+];

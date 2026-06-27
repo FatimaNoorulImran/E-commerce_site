@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart – Zevar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-brand">زیور <span>ZEVAR</span></a>
+  <div class="nav-right">
+    <a href="shop.html" class="nav-link">Shop</a>
+    <a href="cart.html" class="nav-link cart-btn">🛍 Cart <span class="cart-count" id="cartCount">0</span></a>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="../index.html">Home</a> / <span>Cart</span>
+</div>
+
+<div class="cart-page" id="cartPageWrap">
+  <!-- Populated by JS -->
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <strong>زیور Zevar</strong>
+      <p>Adornment for the Pakistani Woman<br>Lahore, Pakistan</p>
+    </div>
+    <div class="footer-links">
+      <h4>Shop</h4>
+      <a href="shop.html">All Products</a>
+    </div>
+    <div class="footer-links">
+      <h4>Help</h4>
+      <a href="#">Returns</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Zevar.</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/cart.js"></script>
+<script>
+  function renderCartPage() {
+    const wrap = document.getElementById('cartPageWrap');
+    updateCartCount();
+
+    if (!cart.length) {
+      wrap.innerHTML = `
+        <div style="grid-column:1/-1" class="empty-cart-msg">
+          <span class="big-emoji">🛍</span>
+          <p>Your cart is empty.</p>
+          <a href="shop.html" class="hero-cta primary">Continue Shopping</a>
+        </div>`;
+      return;
+    }
+
+    const shipping = getCartTotal() >= 3000 ? 0 : 200;
+    const total = getCartTotal() + shipping;
+
+    wrap.innerHTML = `
+      <div class="cart-items-list">
+        <h1 class="cart-page-title">Your Cart <span style="font-size:1rem;color:var(--muted);font-family:Inter">(${getCartItemCount()} items)</span></h1>
+        ${cart.map(c => `
+          <div class="cart-page-item">
+            <img class="cpi-img" src="${c.img}" alt="${c.name}" onclick="location.href='product.html?id=${c.id}'" style="cursor:pointer">
+            <div class="cpi-info">
+              <p class="cpi-cat">${c.cat}</p>
+              <p class="cpi-name">${c.name}</p>
+              <p class="cpi-price">Rs ${(c.price * c.qty).toLocaleString()} <span style="font-size:0.78rem;color:var(--muted);font-weight:400">(Rs ${c.price.toLocaleString()} each)</span></p>
+              <div class="cpi-controls">
+                <button class="ci-btn" onclick="updateQty(${c.id}, -1)">−</button>
+                <span class="ci-qty">${c.qty}</span>
+                <button class="ci-btn" onclick="updateQty(${c.id}, 1)">+</button>
+                <button class="remove-btn" onclick="removeItem(${c.id})">✕ Remove</button>
+              </div>
+            </div>
+          </div>`).join('')}
+        <div style="margin-top:1.5rem">
+          <a href="shop.html" style="color:var(--gold-dark);font-size:0.85rem;text-decoration:underline">← Continue Shopping</a>
+        </div>
+      </div>
+      <div class="order-summary">
+        <h2 class="summary-title">Order Summary</h2>
+        <div class="summary-row"><span class="summary-label">Subtotal (${getCartItemCount()} items)</span><span>Rs ${getCartTotal().toLocaleString()}</span></div>
+        <div class="summary-row"><span class="summary-label">Shipping</span><span>${shipping === 0 ? '<span style="color:var(--success)">Free</span>' : 'Rs ' + shipping}</span></div>
+        ${shipping > 0 ? `<div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.5rem">Add Rs ${(3000 - getCartTotal()).toLocaleString()} more for free shipping</div>` : ''}
+        <div class="summary-row total"><span class="summary-label">Total</span><span>Rs ${total.toLocaleString()}</span></div>
+        <a href="checkout.html" class="checkout-link">Proceed to Checkout →</a>
+        <p style="font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem">🔒 Secure checkout · Cash on Delivery available</p>
+      </div>`;
+  }
+
+  updateCartCount();
+  renderCartPage();
+</script>
+</body>
+</html>

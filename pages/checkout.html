@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout – Zevar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-brand">زیور <span>ZEVAR</span></a>
+  <div class="nav-right">
+    <a href="cart.html" class="nav-link cart-btn">🛍 Cart <span class="cart-count" id="cartCount">0</span></a>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="../index.html">Home</a> / <a href="cart.html">Cart</a> / <span>Checkout</span>
+</div>
+
+<div id="checkoutWrap"></div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/cart.js"></script>
+<script>
+  function renderCheckout() {
+    const wrap = document.getElementById('checkoutWrap');
+    updateCartCount();
+
+    if (!cart.length) {
+      wrap.innerHTML = `<div class="empty-cart-msg"><span class="big-emoji">🛍</span><p>Your cart is empty.</p><a href="shop.html" class="hero-cta primary">Shop Now</a></div>`;
+      return;
+    }
+
+    const shipping = getCartTotal() >= 3000 ? 0 : 200;
+    const total = getCartTotal() + shipping;
+
+    wrap.innerHTML = `
+      <div class="checkout-page">
+        <div>
+          <h1 class="checkout-title">Checkout</h1>
+
+          <!-- CONTACT -->
+          <p class="checkout-section-label">Contact Information</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name *</label>
+              <input type="text" class="form-input" id="fname" placeholder="Fatima">
+              <div class="error-msg" id="err-fname">Please enter your first name</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name *</label>
+              <input type="text" class="form-input" id="lname" placeholder="Khan">
+              <div class="error-msg" id="err-lname">Please enter your last name</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email *</label>
+            <input type="email" class="form-input" id="email" placeholder="fatima@example.com">
+            <div class="error-msg" id="err-email">Please enter a valid email address</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number *</label>
+            <input type="tel" class="form-input" id="phone" placeholder="03XX-XXXXXXX">
+            <div class="error-msg" id="err-phone">Please enter a valid Pakistani phone number</div>
+          </div>
+
+          <!-- SHIPPING -->
+          <p class="checkout-section-label" style="margin-top:1.5rem">Shipping Address</p>
+          <div class="form-group">
+            <label class="form-label">Street Address *</label>
+            <input type="text" class="form-input" id="address" placeholder="House #5, Street 3, Model Town">
+            <div class="error-msg" id="err-address">Please enter your address</div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">City *</label>
+              <input type="text" class="form-input" id="city" placeholder="Lahore">
+              <div class="error-msg" id="err-city">Please enter your city</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Province *</label>
+              <select class="form-select" id="province">
+                <option value="">Select Province</option>
+                <option>Punjab</option>
+                <option>Sindh</option>
+                <option>Khyber Pakhtunkhwa</option>
+                <option>Balochistan</option>
+                <option>Islamabad (ICT)</option>
+                <option>Gilgit-Baltistan</option>
+                <option>Azad Kashmir</option>
+              </select>
+              <div class="error-msg" id="err-province">Please select your province</div>
+            </div>
+          </div>
+
+          <!-- PAYMENT -->
+          <p class="checkout-section-label" style="margin-top:1.5rem">Payment Method</p>
+          <div class="payment-options">
+            <label class="payment-opt selected" onclick="selectPayment(this)">
+              <input type="radio" name="payment" value="cod" checked>
+              <span> Cash on Delivery</span>
+            </label>
+            <label class="payment-opt" onclick="selectPayment(this)">
+              <input type="radio" name="payment" value="easypaisa">
+              <span> Easypaisa / JazzCash</span>
+            </label>
+            <label class="payment-opt" onclick="selectPayment(this)">
+              <input type="radio" name="payment" value="card">
+              <span> Debit / Credit Card</span>
+            </label>
+          </div>
+
+          <div id="cardFields" style="display:none">
+            <div class="form-group">
+              <label class="form-label">Card Number *</label>
+              <input type="text" class="form-input" id="cardNum" placeholder="0000 0000 0000 0000" maxlength="19">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Expiry *</label>
+                <input type="text" class="form-input" id="expiry" placeholder="MM/YY" maxlength="5">
+              </div>
+              <div class="form-group">
+                <label class="form-label">CVV *</label>
+                <input type="text" class="form-input" id="cvv" placeholder="123" maxlength="3">
+              </div>
+            </div>
+          </div>
+
+          <button class="place-order-btn" onclick="placeOrder()" style="margin-top:1.5rem">Place Order →</button>
+        </div>
+
+        <!-- ORDER SUMMARY -->
+        <div class="order-summary">
+          <h2 class="summary-title">Order Summary</h2>
+          ${cart.map(c => `
+            <div style="display:flex;gap:0.75rem;align-items:center;margin-bottom:0.75rem">
+              <img src="${c.img}" style="width:52px;height:60px;border-radius:8px;object-fit:cover" alt="${c.name}">
+              <div style="flex:1">
+                <p style="font-size:0.85rem;font-weight:500">${c.name}</p>
+                <p style="font-size:0.75rem;color:var(--muted)">Qty: ${c.qty}</p>
+              </div>
+              <span style="font-size:0.88rem;font-weight:600">Rs ${(c.price * c.qty).toLocaleString()}</span>
+            </div>`).join('')}
+          <div style="border-top:1px solid var(--border);margin-top:0.5rem;padding-top:0.75rem">
+            <div class="summary-row"><span class="summary-label">Subtotal</span><span>Rs ${getCartTotal().toLocaleString()}</span></div>
+            <div class="summary-row"><span class="summary-label">Shipping</span><span>${shipping === 0 ? '<span style="color:var(--success)">Free</span>' : 'Rs ' + shipping}</span></div>
+            <div class="summary-row total"><span class="summary-label">Total</span><span>Rs ${total.toLocaleString()}</span></div>
+          </div>
+          <p style="font-size:0.75rem;color:var(--muted);margin-top:1rem;text-align:center">🔒 Your information is secure</p>
+        </div>
+      </div>`;
+  }
+
+  function selectPayment(el) {
+    document.querySelectorAll('.payment-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+    document.getElementById('cardFields').style.display =
+      el.querySelector('input').value === 'card' ? 'block' : 'none';
+  }
+
+  function validate() {
+    let valid = true;
+    const fields = [
+      { id: 'fname', test: v => v.trim().length >= 2, err: 'err-fname' },
+      { id: 'lname', test: v => v.trim().length >= 2, err: 'err-lname' },
+      { id: 'email', test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), err: 'err-email' },
+      { id: 'phone', test: v => /^0[0-9]{9,10}$/.test(v.replace(/[-\s]/g, '')), err: 'err-phone' },
+      { id: 'address', test: v => v.trim().length >= 5, err: 'err-address' },
+      { id: 'city', test: v => v.trim().length >= 2, err: 'err-city' },
+      { id: 'province', test: v => v !== '', err: 'err-province' },
+    ];
+    fields.forEach(f => {
+      const el = document.getElementById(f.id);
+      const errEl = document.getElementById(f.err);
+      if (!el) return;
+      if (!f.test(el.value)) {
+        el.classList.add('error');
+        errEl.classList.add('show');
+        valid = false;
+      } else {
+        el.classList.remove('error');
+        errEl.classList.remove('show');
+      }
+    });
+
+    // Card validation if selected
+    const paymentVal = document.querySelector('input[name="payment"]:checked')?.value;
+    if (paymentVal === 'card') {
+      const cardNum = document.getElementById('cardNum').value.replace(/\s/g, '');
+      if (cardNum.length < 16) { document.getElementById('cardNum').classList.add('error'); valid = false; }
+    }
+
+    return valid;
+  }
+
+  function placeOrder() {
+    if (!validate()) {
+      showToast('Please fill in all required fields', 'error');
+      return;
+    }
+    // Generate order ID
+    const orderId = 'ZVR-' + Date.now().toString(36).toUpperCase();
+    localStorage.setItem('zevar_last_order', JSON.stringify({ orderId, items: cart, total: getCartTotal() }));
+    clearCart();
+    location.href = 'success.html?order=' + orderId;
+  }
+
+  // Format card number with spaces
+  document.addEventListener('input', e => {
+    if (e.target.id === 'cardNum') {
+      e.target.value = e.target.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();
+    }
+    if (e.target.id === 'expiry') {
+      e.target.value = e.target.value.replace(/\D/g, '').replace(/^(\d{2})(\d)/, '$1/$2');
+    }
+  });
+
+  updateCartCount();
+  renderCheckout();
+</script>
+</body>
+</html>

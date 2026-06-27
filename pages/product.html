@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product – Zevar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-brand">زیور <span>ZEVAR</span></a>
+  <div class="nav-right">
+    <a href="shop.html" class="nav-link">Shop</a>
+    <a href="cart.html" class="nav-link cart-btn"> Cart <span class="cart-count" id="cartCount">0</span></a>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="../index.html">Home</a> / <a href="shop.html">Shop</a> / <span id="bcName">Product</span>
+</div>
+
+<div class="product-detail" id="detailWrap">
+  <!-- Populated by JS -->
+</div>
+
+<!-- RELATED PRODUCTS -->
+<div style="max-width:1000px;margin:2rem auto;padding:0 2rem 3rem">
+  <div class="section-header">
+    <h2 class="section-title">You May Also Like</h2>
+  </div>
+  <div class="products-grid" id="relatedGrid"></div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <strong>زیور Zevar</strong>
+      <p>Adornment for the Pakistani Woman<br>Lahore, Pakistan</p>
+    </div>
+    <div class="footer-links">
+      <h4>Shop</h4>
+      <a href="shop.html">All Products</a>
+    </div>
+    <div class="footer-links">
+      <h4>Help</h4>
+      <a href="#">Returns</a>
+    </div>
+  </div>
+  <div class="footer-bottom">Zevar.</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/cart.js"></script>
+<script>
+  let qty = 1;
+  const id = parseInt(new URLSearchParams(location.search).get('id'));
+  const product = PRODUCTS.find(p => p.id === id);
+
+  if (!product) {
+    document.getElementById('detailWrap').innerHTML = '<p style="padding:3rem;color:var(--muted)">Product not found. <a href="shop.html">Back to shop</a></p>';
+  } else {
+    document.title = product.name + ' – Zevar';
+    document.getElementById('bcName').textContent = product.name;
+
+    document.getElementById('detailWrap').innerHTML = `
+      <div>
+        <img class="detail-img" src="${product.img}" alt="${product.name}">
+      </div>
+      <div>
+        ${product.badge ? `<span class="detail-badge">${product.badge}</span>` : ''}
+        <p class="detail-cat">${product.cat}</p>
+        <h1 class="detail-name">${product.name}</h1>
+        <div class="detail-stars">${starsHTML(product.rating, product.reviews)}</div>
+        <p class="detail-price">
+          Rs ${product.price.toLocaleString()}
+          ${product.oldPrice ? `<span class="detail-old">Rs ${product.oldPrice.toLocaleString()}</span>` : ''}
+        </p>
+        ${product.oldPrice ? `<p style="color:var(--rose);font-size:0.85rem;font-weight:600;margin-bottom:0.75rem">You save Rs ${(product.oldPrice - product.price).toLocaleString()}!</p>` : ''}
+        <p class="detail-desc">${product.desc}</p>
+        <p class="detail-label">Quantity</p>
+        <div class="qty-row">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <span class="qty-val" id="qtyVal">1</span>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+        <button class="detail-add-btn" onclick="addToCartAndGo()">Add to Cart 🛍</button>
+        <a href="cart.html" style="display:block;text-align:center;color:var(--gold-dark);font-size:0.85rem;text-decoration:underline;margin-top:0.5rem">View Cart</a>
+        <div style="margin-top:1.5rem;padding:1rem;background:rgba(201,168,76,0.08);border-radius:10px;border:1px solid var(--border)">
+          <p style="font-size:0.82rem;color:var(--muted)"> Free delivery on orders over Rs 3,000 &nbsp;·&nbsp;  Easy 7-day returns</p>
+        </div>
+      </div>`;
+
+    // Related products (same category, different item)
+    const related = PRODUCTS.filter(p => p.cat === product.cat && p.id !== product.id).slice(0, 4);
+    document.getElementById('relatedGrid').innerHTML = related.map(p => `
+      <div class="product-card" onclick="location.href='product.html?id=${p.id}'">
+        <div class="product-img-wrap">
+          <img class="product-img" src="${p.img}" alt="${p.name}" loading="lazy">
+          ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+        </div>
+        <div class="product-body">
+          <p class="product-cat">${p.cat}</p>
+          <h3 class="product-name">${p.name}</h3>
+          <div class="product-footer">
+            <div class="product-price">Rs ${p.price.toLocaleString()}${p.oldPrice ? `<span class="old">Rs ${p.oldPrice.toLocaleString()}</span>` : ''}</div>
+            <button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id})">+ Cart</button>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  function changeQty(delta) {
+    qty = Math.max(1, qty + delta);
+    document.getElementById('qtyVal').textContent = qty;
+  }
+
+  function addToCartAndGo() {
+    addToCart(id, qty);
+  }
+
+  updateCartCount();
+</script>
+</body>
+</html>

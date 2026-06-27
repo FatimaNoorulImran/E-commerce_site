@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop – Zevar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-brand">زیور <span>ZEVAR</span></a>
+  <div class="nav-right">
+    <a href="../index.html" class="nav-link">Home</a>
+    <a href="cart.html" class="nav-link cart-btn">🛍 Cart <span class="cart-count" id="cartCount">0</span></a>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <h1>Our Collection</h1>
+  <p>Handcrafted with love — traditional Pakistani fashion for the modern woman</p>
+</div>
+
+<!-- INLINE SEARCH -->
+<div class="search-bar-inline">
+  <div class="search-wrap">
+    <input type="text" class="search-input" placeholder="Search products…" id="shopSearch">
+    <button class="search-btn" onclick="applySearch()">Search</button>
+  </div>
+</div>
+
+<!-- FILTER CONTROLS -->
+<div class="controls">
+  <span class="filter-label">Filter</span>
+  <div class="filter-pills" id="filterPills">
+    <button class="pill active" onclick="filter('all', this)">All</button>
+    <button class="pill" onclick="filter('Kurta', this)">Kurtas</button>
+    <button class="pill" onclick="filter('Lawn Suit', this)">Lawn Suits</button>
+    <button class="pill" onclick="filter('Shalwar Kameez', this)">Shalwar Kameez</button>
+    <button class="pill" onclick="filter('Bangles', this)">Bangles</button>
+    <button class="pill" onclick="filter('Dupatta', this)">Dupattas</button>
+    <button class="pill" onclick="filter('Jewellery', this)">Jewellery</button>
+  </div>
+  <select class="sort-select" onchange="sortProducts(this.value)">
+    <option value="">Sort by</option>
+    <option value="low">Price: Low to High</option>
+    <option value="high">Price: High to Low</option>
+    <option value="rating">Top Rated</option>
+    <option value="discount">Biggest Discount</option>
+  </select>
+</div>
+
+<!-- PRODUCTS -->
+<div style="max-width:1200px;margin:0 auto">
+  <div class="shop-header">
+    <h2 class="section-title" id="shopTitle">All Products</h2>
+    <span class="section-count" id="countLabel">12 pieces</span>
+  </div>
+  <div class="products-grid" style="padding:0 2rem 3rem" id="grid"></div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <strong>زیور Zevar</strong>
+      <p>Adornment for the Pakistani Woman<br>Lahore, Pakistan</p>
+    </div>
+    <div class="footer-links">
+      <h4>Shop</h4>
+      <a href="#">All Products</a>
+      <a href="#">Kurtas</a>
+      <a href="#">Lawn Suits</a>
+    </div>
+    <div class="footer-links">
+      <h4>Help</h4>
+      <a href="#">Size Guide</a>
+      <a href="#">Returns</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+  <div class="footer-bottom"> Zevar. Crafted with love in Pakistan.</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/cart.js"></script>
+<script>
+  let currentFilter = 'all';
+  let currentSort = '';
+  let searchQuery = '';
+
+  function getFiltered() {
+    let products = currentFilter === 'all' ? [...PRODUCTS] : PRODUCTS.filter(p => p.cat === currentFilter);
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      products = products.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.cat.toLowerCase().includes(q) ||
+        p.desc.toLowerCase().includes(q)
+      );
+    }
+    if (currentSort === 'low') products.sort((a,b) => a.price - b.price);
+    else if (currentSort === 'high') products.sort((a,b) => b.price - a.price);
+    else if (currentSort === 'rating') products.sort((a,b) => b.rating - a.rating);
+    else if (currentSort === 'discount') products.sort((a,b) => {
+      const da = a.oldPrice ? a.oldPrice - a.price : 0;
+      const db = b.oldPrice ? b.oldPrice - b.price : 0;
+      return db - da;
+    });
+    return products;
+  }
+
+  function renderGrid() {
+    const products = getFiltered();
+    const grid = document.getElementById('grid');
+    document.getElementById('countLabel').textContent = products.length + ' pieces';
+    if (!products.length) {
+      grid.innerHTML = `<div class="search-no-results" style="grid-column:1/-1">
+        <span class="big">🔍</span>
+        <p>No products found for "<strong>${searchQuery || currentFilter}</strong>".</p>
+        <button class="hero-cta primary" onclick="clearSearch()">Clear Filter</button>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = products.map(p => {
+      const inCart = cart.find(c => c.id === p.id);
+      return `
+      <div class="product-card" onclick="location.href='product.html?id=${p.id}'">
+        <div class="product-img-wrap">
+          <img class="product-img" src="${p.img}" alt="${p.name}" loading="lazy">
+          ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+        </div>
+        <div class="product-body">
+          <p class="product-cat">${p.cat}</p>
+          <h3 class="product-name">${p.name}</h3>
+          <div class="product-stars">${starsHTML(p.rating, p.reviews)}</div>
+          <div class="product-footer">
+            <div class="product-price">
+              Rs ${p.price.toLocaleString()}
+              ${p.oldPrice ? `<span class="old">Rs ${p.oldPrice.toLocaleString()}</span>` : ''}
+            </div>
+            <button class="add-btn ${inCart ? 'added' : ''}" onclick="event.stopPropagation(); addToCart(${p.id})" id="btn-${p.id}">
+              ${inCart ? '✓ Added' : '+ Cart'}
+            </button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function filter(cat, el) {
+    currentFilter = cat;
+    searchQuery = '';
+    document.getElementById('shopSearch').value = '';
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('shopTitle').textContent = cat === 'all' ? 'All Products' : cat + 's';
+    renderGrid();
+  }
+
+  function sortProducts(val) { currentSort = val; renderGrid(); }
+
+  function applySearch() {
+    searchQuery = document.getElementById('shopSearch').value.trim();
+    if (searchQuery) {
+      currentFilter = 'all';
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      document.querySelector('.pill').classList.add('active');
+      document.getElementById('shopTitle').textContent = `Results for "${searchQuery}"`;
+    }
+    renderGrid();
+  }
+
+  function clearSearch() {
+    searchQuery = '';
+    currentFilter = 'all';
+    document.getElementById('shopSearch').value = '';
+    document.getElementById('shopTitle').textContent = 'All Products';
+    document.querySelectorAll('.pill').forEach((p,i) => i===0 ? p.classList.add('active') : p.classList.remove('active'));
+    renderGrid();
+  }
+
+  document.getElementById('shopSearch').addEventListener('keydown', e => {
+    if (e.key === 'Enter') applySearch();
+  });
+
+  // Handle URL params (from homepage search or category clicks)
+  const params = new URLSearchParams(location.search);
+  const filterParam = params.get('filter');
+  const searchParam = params.get('search');
+
+  if (searchParam) {
+    searchQuery = searchParam;
+    document.getElementById('shopSearch').value = searchParam;
+    document.getElementById('shopTitle').textContent = `Results for "${searchParam}"`;
+  } else if (filterParam) {
+    currentFilter = filterParam;
+    document.getElementById('shopTitle').textContent = filterParam;
+    document.querySelectorAll('.pill').forEach(p => {
+      p.classList.toggle('active', p.textContent.trim().replace(/s$/, '') === filterParam.replace(/s$/, '') || filterParam === 'all');
+    });
+  }
+
+  updateCartCount();
+  renderGrid();
+</script>
+</body>
+</html>

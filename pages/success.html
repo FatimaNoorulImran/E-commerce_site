@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmed – Zevar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-brand">زیور <span>ZEVAR</span></a>
+  <div class="nav-right">
+    <a href="shop.html" class="nav-link">Shop</a>
+    <a href="cart.html" class="nav-link cart-btn">🛍 Cart <span class="cart-count" id="cartCount">0</span></a>
+  </div>
+</nav>
+
+<div id="successWrap"></div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <strong>زیور Zevar</strong>
+      <p>Adornment for the Pakistani Woman<br>Lahore, Pakistan</p>
+    </div>
+    <div class="footer-links">
+      <h4>Shop</h4>
+      <a href="shop.html">All Products</a>
+    </div>
+    <div class="footer-links">
+      <h4>Help</h4>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Zevar.</div>
+</footer>
+
+<script src="../js/data.js"></script>
+<script src="../js/cart.js"></script>
+<script>
+  updateCartCount();
+  const orderId = new URLSearchParams(location.search).get('order') || 'ZVR-XXXXXX';
+  const lastOrder = JSON.parse(localStorage.getItem('zevar_last_order') || '{}');
+
+  document.getElementById('successWrap').innerHTML = `
+    <div class="success-page">
+      <span class="success-icon">🎉</span>
+      <h1>Order Confirmed!</h1>
+      <p>Thank you for shopping with Zevar. Your order has been placed successfully.<br>You'll receive a confirmation SMS shortly.</p>
+      <div class="order-id">Order ID: ${orderId}</div>
+      <div style="max-width:420px;margin:0 auto 2rem;background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:1.5rem;text-align:left">
+        <p style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:1rem;color:var(--charcoal)">What happens next?</p>
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div style="display:flex;gap:0.75rem;align-items:flex-start">
+            <span style="background:var(--gold);color:var(--charcoal);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0">1</span>
+            <div><p style="font-size:0.88rem;font-weight:600">Order Processing</p><p style="font-size:0.8rem;color:var(--muted)">We'll confirm your order within 24 hours</p></div>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start">
+            <span style="background:var(--gold);color:var(--charcoal);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0">2</span>
+            <div><p style="font-size:0.88rem;font-weight:600">Dispatch</p><p style="font-size:0.8rem;color:var(--muted)">Your order ships within 2-3 business days</p></div>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start">
+            <span style="background:var(--gold);color:var(--charcoal);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0">3</span>
+            <div><p style="font-size:0.88rem;font-weight:600">Delivery</p><p style="font-size:0.8rem;color:var(--muted)">Expected delivery in 5-7 business days</p></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <a href="shop.html" class="hero-cta primary">Continue Shopping</a>
+        <a href="../index.html" class="hero-cta">Back to Home</a>
+      </div>
+    </div>`;
+</script>
+</body>
+</html>
