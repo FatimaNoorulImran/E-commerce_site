@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zevar – Pakistani Women's Fashion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">زیور <span>ZEVAR</span></div>
+  <div class="nav-right">
+    <a href="pages/shop.html" class="nav-link">Shop</a>
+    <a href="pages/cart.html" class="nav-link cart-btn">
+      🛍 Cart <span class="cart-count" id="cartCount">0</span>
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">New Summer Collection · 2026</p>
+    <h1 class="hero-title">Dress in the Spirit<br>of <em>Pakistan</em></h1>
+    <p class="hero-sub">Handcrafted kurtas, embroidered lawn suits, and timeless jewellery inspired by the colours of our land.</p>
+    <div class="hero-actions">
+      <a href="pages/shop.html" class="hero-cta primary">Explore Collection</a>
+      <a href="pages/shop.html?filter=New" class="hero-cta">New Arrivals</a>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH BAR -->
+<div class="search-section">
+  <div class="search-wrap">
+    <input type="text" class="search-input" placeholder="Search for kurtas, lawn suits, jewellery…" id="heroSearch">
+    <button class="search-btn" onclick="doSearch()">Search</button>
+  </div>
+</div>
+
+<!-- FEATURED CATEGORIES -->
+<section class="categories-section">
+  <div class="section-header centered">
+    <p class="eyebrow">Browse By</p>
+    <h2 class="section-title">Shop Categories</h2>
+  </div>
+  <div class="cat-grid">
+    <a href="pages/shop.html?filter=Kurta" class="cat-card">
+      <img src="https://i.pinimg.com/736x/00/32/38/0032383be718d8546061ca6fd15f9f26.jpg" alt="Kurtas">
+      <div class="cat-label">Kurtas</div>
+    </a>
+    <a href="pages/shop.html?filter=Lawn+Suit" class="cat-card">
+      <img src="https://i.pinimg.com/736x/dc/ac/5a/dcac5a172daaf611f7d238c549d882b9.jpg" alt="Lawn Suits">
+      <div class="cat-label">Lawn Suits</div>
+    </a>
+    <a href="pages/shop.html?filter=Shalwar+Kameez" class="cat-card">
+      <img src="https://i.pinimg.com/736x/c5/d6/9f/c5d69fafb187ff757fd1f7409484f5a0.jpg" alt="Shalwar Kameez">
+      <div class="cat-label">Shalwar Kameez</div>
+    </a>
+    <a href="pages/shop.html?filter=Jewellery" class="cat-card">
+      <img src="https://i.pinimg.com/736x/78/b6/16/78b616ecf47731ec5da061a42d2e5869.jpg" alt="Jewellery">
+      <div class="cat-label">Jewellery</div>
+    </a>
+    <a href="pages/shop.html?filter=Bangles" class="cat-card">
+      <img src="https://i.pinimg.com/736x/c5/b3/1b/c5b31baf88befe0d62a44a73b100f82f.jpg" alt="Bangles">
+      <div class="cat-label">Bangles</div>
+    </a>
+    <a href="pages/shop.html?filter=Dupatta" class="cat-card">
+      <img src="https://i.pinimg.com/1200x/06/8c/7f/068c7fc8b1e86e7d79c3472a5092aa1b.jpg" alt="Dupattas">
+      <div class="cat-label">Dupattas</div>
+    </a>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="featured-section">
+  <div class="section-header centered">
+    <p class="eyebrow">Handpicked For You</p>
+    <h2 class="section-title">Bestsellers</h2>
+  </div>
+  <div class="products-grid" id="featuredGrid"></div>
+  <div style="text-align:center;padding:2rem 0 3rem">
+    <a href="pages/shop.html" class="hero-cta primary">View All Products</a>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<section class="trust-strip">
+  <div class="trust-item"> <span>Free delivery on orders over Rs 3,000</span></div>
+  <div class="trust-item"> <span>Easy 7-day returns</span></div>
+  <div class="trust-item"> <span>100% authentic Pakistani craftsmanship</span></div>
+  <div class="trust-item"> <span>Secure checkout</span></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <strong>زیور Zevar</strong>
+      <p>Adornment for the Pakistani Woman<br>Rawalpindi, Pakistan</p>
+    </div>
+    <div class="footer-links">
+      <h4>Shop</h4>
+      <a href="pages/shop.html">All Products</a>
+      <a href="pages/shop.html?filter=Kurta">Kurtas</a>
+      <a href="pages/shop.html?filter=Lawn+Suit">Lawn Suits</a>
+      <a href="pages/shop.html?filter=Jewellery">Jewellery</a>
+    </div>
+    <div class="footer-links">
+      <h4>Help</h4>
+      <a href="#">Size Guide</a>
+      <a href="#">Shipping Policy</a>
+      <a href="#">Returns</a>
+      <a href="#">Contact Us</a>
+    </div>
+  </div>
+  <div class="footer-bottom">Zevar. Crafted with love in Pakistan.</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script>
+  updateCartCount();
+
+  // Render featured (bestsellers + new)
+  const featured = PRODUCTS.filter(p => p.badge === 'Bestseller' || p.badge === 'New').slice(0, 4);
+  const grid = document.getElementById('featuredGrid');
+  grid.innerHTML = featured.map(p => {
+    return `
+    <div class="product-card" onclick="location.href='pages/product.html?id=${p.id}'">
+      <div class="product-img-wrap">
+        <img class="product-img" src="${p.img}" alt="${p.name}" loading="lazy">
+        ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+      </div>
+      <div class="product-body">
+        <p class="product-cat">${p.cat}</p>
+        <h3 class="product-name">${p.name}</h3>
+        <div class="product-footer">
+          <div class="product-price">
+            Rs ${p.price.toLocaleString()}
+            ${p.oldPrice ? `<span class="old">Rs ${p.oldPrice.toLocaleString()}</span>` : ''}
+          </div>
+          <button class="add-btn" onclick="event.stopPropagation(); addToCart(${p.id})">+ Cart</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  function doSearch() {
+    const q = document.getElementById('heroSearch').value.trim();
+    if (q) location.href = `pages/shop.html?search=${encodeURIComponent(q)}`;
+  }
+  document.getElementById('heroSearch').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSearch();
+  });
+</script>
+</body>
+</html>
